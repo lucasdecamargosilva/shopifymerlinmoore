@@ -33,11 +33,11 @@
                 a.href = 'https://provoulevou.com.br?utm_source=widget&utm_medium=lojista&utm_campaign=merlinmoore';
                 a.target = '_blank';
                 a.rel = 'noopener';
-                a.title = 'Experimente Óculos Online — Provou Levou';
+                a.title = 'Provador Virtual de Óculos por Provou Levou';
                 a.style.cssText = 'display:inline-block;text-decoration:none;border:0;outline:0;';
                 var img = document.createElement('img');
                 img.src = 'https://i.ibb.co/MD3B4FQf/Logo-provou-preto-1.png';
-                img.alt = 'Experimente Óculos Online — Provou Levou';
+                img.alt = 'Provador Virtual de Óculos por Provou Levou';
                 img.style.cssText = 'height:12px;width:auto;border:0;display:block;';
                 a.appendChild(img);
                 b.appendChild(a);
@@ -155,7 +155,6 @@
 
     const styles = `
         /* ── Fontes ── */
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
 
         :root {
             --c-bg: #ffffff;
@@ -165,38 +164,31 @@
             --c-line: #e8e8e8;
             --c-accent: #111111;
             --c-danger: #cc3333;
-            --font-display: 'magazine-grotesque-regular', 'DM Sans', sans-serif;
-            --font-body: 'magazine-grotesque-regular', 'DM Sans', sans-serif;
+            --font-display: inherit;
+            --font-body: inherit;
         }
 
-        /* ── Trigger (style alinhado ao auglio-tryon-btn-product-page) ── */
+        /* ── Trigger (selo sobre foto) ── */
+        @keyframes q-shake { 0%,50%,100%{transform:rotate(0deg)} 10%,30%{transform:rotate(-10deg)} 20%,40%{transform:rotate(10deg)} }
         .q-btn-trigger-ia {
-            position: absolute; top: 15px; left: 15px; z-index: 3;
-            background: #555555 !important; color: #fff !important;
-            border: none; padding: 8px 14px; border-radius: 16px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            letter-spacing: 0.3px;
-            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-            line-height: 2; white-space: nowrap; box-sizing: border-box;
-            font-family: inherit;
+            position: absolute; top: 60px; right: 14px; z-index: 100;
+            background: none; border: none; padding: 0; cursor: pointer;
+            width: 70px; height: 70px;
+            display: flex; align-items: center; justify-content: center;
+            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.22));
+            animation: q-shake 3s infinite;
+            transition: filter 0.2s;
         }
-        .q-btn-trigger-ia:hover { filter: brightness(1.1); }
-        .q-btn-trigger-ia svg { width: 19px; height: 19px; flex-shrink: 0; }
-        @media (max-width: 999px) {
-            .q-btn-trigger-ia {
-                top: auto; right: auto;
-                bottom: 10px; left: 15px;
-                padding: 7px 16px; border-radius: 17px;
-            }
-            .q-btn-trigger-ia svg { width: 17px; height: 17px; }
-        }
+        .q-btn-trigger-ia:hover { filter: drop-shadow(0 6px 18px rgba(0,0,0,0.32)); }
+        .q-btn-trigger-ia img { width: 100%; height: 100%; object-fit: contain; }
+        @media (min-width: 768px) { .q-btn-trigger-ia { width: 70px; height: 70px; } }
 
         /* ── Inline button ── */
         .q-btn-inline-provador {
             display: flex; align-items: center; justify-content: center; gap: 7px;
             width: 100%; padding: 13px 16px;
             background: transparent; color: var(--c-ink);
-            border: 1.5px solid var(--c-ink); border-radius: 999px;
+            border: 1.5px solid var(--c-ink); border-radius: 4px;
             font-family: 'Work Sans', var(--font-body), sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
             cursor: pointer; transition: background 0.25s, color 0.25s;
             margin-bottom: 10px; box-sizing: border-box;
@@ -213,7 +205,6 @@
             overflow-y: auto; box-sizing: border-box;
         }
         #q-modal-ia * { box-sizing: border-box; }
-        #q-modal-ia, #q-modal-ia * { text-transform: lowercase !important; }
 
         /* ── Card ── */
         .q-card-ia {
@@ -229,7 +220,6 @@
                 max-height: 96vh; border: none;
                 box-shadow: 0 32px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
                 overflow: hidden;
-                border-radius: 24px;
             }
         }
 
@@ -237,7 +227,7 @@
         .q-close-ia {
             position: absolute; top: 18px; right: 18px;
             background: none; border: none;
-            font-size: 26px; font-weight: 300; color: var(--c-muted);
+            font-size: 20px; font-weight: 300; color: var(--c-muted);
             cursor: pointer; z-index: 10; line-height: 1; padding: 4px 6px;
             transition: color 0.2s;
         }
@@ -269,7 +259,7 @@
         #q-header-provador h1 {
             margin: 0;
             font-family: var(--font-display);
-            font-size: 28px; letter-spacing: 4px;
+            font-size: 22px; letter-spacing: 4px;
             color: var(--c-ink); text-transform: uppercase;
             font-weight: 400; line-height: 1;
         }
@@ -287,31 +277,6 @@
             color: var(--c-muted); margin-bottom: 8px;
         }
         .q-phone-wrap { margin-bottom: 28px; }
-
-        .q-provas-msg:empty { display: none; }
-        .q-provas-msg {
-            font-size: 15px; margin-top: 14px; letter-spacing: 0.4px;
-            color: #fff; font-weight: 700;
-            background: var(--c-ink);
-            border: 2px solid var(--c-ink);
-            border-radius: 18px;
-            padding: 14px 18px;
-            text-align: center;
-            text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: background 0.2s, color 0.2s, border-color 0.2s;
-        }
-        .q-provas-msg.is-warn {
-            color: #fff;
-            background: var(--c-danger);
-            border-color: var(--c-danger);
-            font-weight: 700;
-            animation: q-pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes q-pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(204,51,51,0.5); }
-            50%      { box-shadow: 0 0 0 8px rgba(204,51,51,0); }
-        }
 
         /* ── Photo selector (product images carousel) ── */
         .q-photo-selector-wrap { margin-bottom: 28px; display: none; }
@@ -334,7 +299,7 @@
             cursor: pointer; padding: 0; margin: 0;
             border: 1.5px solid var(--c-line);
             background: var(--c-surface);
-            overflow: hidden; border-radius: 14px;
+            overflow: hidden; border-radius: 4px;
             scroll-snap-align: start;
             transition: border-color 0.15s;
         }
@@ -373,9 +338,9 @@
         .q-photo-arrow-right { right: -6px; }
         .q-input {
             display: block; width: 100%; height: 52px;
-            padding: 0 18px; margin: 0;
-            background: var(--c-surface); border: 1.5px solid var(--c-line);
-            border-radius: 999px;
+            padding: 0 16px; margin: 0;
+            background: var(--c-surface); border: 1.5px solid transparent;
+            border: 1.5px solid var(--c-line); border-radius: 14px;
             font-size: 16px; font-family: var(--font-body); font-weight: 400;
             color: var(--c-ink); outline: none;
             -webkit-appearance: none; appearance: none; transition: border-color 0.2s;
@@ -390,7 +355,7 @@
         /* ── Section label ── */
         .q-section-label {
             font-family: var(--font-display);
-            font-size: 20px; letter-spacing: 3px; text-transform: uppercase;
+            font-size: 16px; letter-spacing: 3px; text-transform: uppercase;
             color: var(--c-ink); margin: 0 0 14px; font-weight: 400;
             text-align: center;
         }
@@ -401,7 +366,7 @@
             background: var(--c-surface);
             padding: 11px 14px; margin-bottom: 20px;
             font-size: 11.5px; color: var(--c-muted); line-height: 1.45;
-            border-radius: 16px;
+            border-radius: 6px;
         }
         .q-tip-box i { color: var(--c-ink); font-size: 15px; flex-shrink: 0; }
         /* ── Required field marker + shake feedback ── */
@@ -429,7 +394,7 @@
             font-size: 13px; font-weight: 600;
             letter-spacing: 0.3px;
             padding: 12px 16px;
-            border-radius: 18px;
+            border-radius: 8px;
             margin-bottom: 12px;
             text-align: center;
             box-shadow: 0 3px 10px rgba(204,51,51,0.25);
@@ -449,7 +414,7 @@
             margin: 0 auto 24px; cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; background: var(--c-surface);
-            border-radius: 20px;
+            border-radius: 4px;
             transition: transform 0.2s;
         }
         .q-face-frame:hover { transform: scale(1.015); }
@@ -478,7 +443,7 @@
             border: 1.5px solid var(--c-line);
             background: transparent; color: var(--c-ink);
             font-family: var(--font-body); font-size: 12px; font-weight: 500;
-            cursor: pointer; transition: border-color 0.2s, background 0.2s; border-radius: 999px;
+            cursor: pointer; transition: border-color 0.2s, background 0.2s; border-radius: 14px;
         }
         .q-upload-btn:hover { border-color: var(--c-ink); background: var(--c-surface); }
         .q-upload-btn i { font-size: 16px; }
@@ -497,24 +462,20 @@
         .q-btn-black {
             width: 100%; height: 52px;
             background: var(--c-ink); color: #fff;
-            border: none; border-radius: 999px;
-            font-family: var(--font-display); font-size: 17px;
-            letter-spacing: 1.5px;
+            border: none; border-radius: 14px;
+            font-family: var(--font-display); font-size: 14px;
+            letter-spacing: 3px; text-transform: uppercase;
             cursor: pointer; transition: opacity 0.2s; box-sizing: border-box;
-            display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 0;
         }
         .q-btn-black:hover:not(:disabled) { opacity: 0.82; }
         .q-btn-black:disabled { background: #ccc; cursor: not-allowed; }
         .q-btn-outline {
             width: 100%; height: 52px;
             background: transparent; color: var(--c-ink);
-            border: 1.5px solid var(--c-line); border-radius: 999px;
-            font-family: var(--font-display); font-size: 17px;
-            letter-spacing: 1.5px;
+            border: 1.5px solid var(--c-line); border-radius: 14px;
+            font-family: var(--font-display); font-size: 14px;
+            letter-spacing: 3px; text-transform: uppercase;
             cursor: pointer; transition: border-color 0.2s, background 0.2s; box-sizing: border-box;
-            display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 0;
         }
         .q-btn-outline:hover { border-color: var(--c-ink); background: var(--c-surface); }
 
@@ -524,7 +485,7 @@
             padding: 36px 28px; flex-direction: column; gap: 16px; align-items: center;
         }
         #q-step-pix h2 {
-            font-family: var(--font-display); font-size: 24px;
+            font-family: var(--font-display); font-size: 19px;
             letter-spacing: 3px; text-transform: uppercase; margin: 0; font-weight: 400;
         }
         .q-pix-subtitle { font-size: 13px; color: var(--c-muted); margin: 0; line-height: 1.6; }
@@ -566,7 +527,7 @@
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .q-loading-t1 {
-            font-family: var(--font-display); font-size: 18px; letter-spacing: 4px;
+            font-family: var(--font-display); font-size: 15px; letter-spacing: 4px;
             text-transform: uppercase; color: var(--c-ink);
             animation: q-alt-show 3.6s ease-in-out infinite;
         }
@@ -590,7 +551,7 @@
 
         .q-res-title {
             display: block;
-            font-family: var(--font-display); font-size: 18px;
+            font-family: var(--font-display); font-size: 15px;
             letter-spacing: 3px; text-transform: uppercase;
             color: var(--c-ink); padding: 20px 28px 16px; margin: 0;
             border-bottom: 1px solid var(--c-line);
@@ -599,17 +560,77 @@
         .q-res-subtitle, .q-res-note { display: none; }
 
         #q-result-img-col {
-            width: 100%; max-height: 72vh; background: var(--c-surface);
+            width: 100%; max-height: 56vh; background: var(--c-surface);
             overflow: hidden; display: flex; align-items: center; justify-content: center;
-            border-radius: 20px;
         }
         #q-result-img-col img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
 
         #q-result-actions-col {
-            display: flex; flex-direction: column; gap: 10px;
-            padding: 20px 28px 0;
+            display: flex; flex-direction: column; gap: 8px;
+            padding: 20px 28px 26px;
         }
         .q-res-mobile-only { margin: 0; }
+
+        /* CTA de compra na tela de resultado */
+        .q-result-prodinfo { text-align: left; margin-bottom: 6px; }
+        .q-result-prodname {
+            font-family: var(--font-body); font-size: 20px; font-weight: 700;
+            color: var(--c-ink); line-height: 1.25; margin-bottom: 6px;
+        }
+        .q-result-prodprice {
+            font-family: var(--font-display); font-size: 28px; letter-spacing: .5px; font-weight: 700;
+            color: var(--c-ink); line-height: 1;
+        }
+        .q-result-installment {
+            font-family: var(--font-body); font-size: 12px; color: var(--c-muted);
+            margin-top: 4px; letter-spacing: .2px;
+        }
+        .q-scarcity {
+            margin-top: 12px; font-family: var(--font-body); font-size: 13px; font-weight: 700;
+            color: var(--c-danger); letter-spacing: 1.5px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: flex-start; gap: 6px;
+        }
+        .q-scarcity i { font-size: 15px; }
+        /* Selos de segurança */
+        .q-seals {
+            display: flex; justify-content: flex-start; gap: 30px;
+            margin: 8px 0; padding: 12px 0;
+            border-top: 1px solid var(--c-line); border-bottom: 1px solid var(--c-line);
+        }
+        .q-seal { display: flex; align-items: center; gap: 9px; }
+        .q-seal > i { font-size: 24px; color: var(--c-ink); flex-shrink: 0; }
+        .q-seal span {
+            font-family: var(--font-body); font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .6px; line-height: 1.25;
+            color: var(--c-ink); text-align: left;
+        }
+        .q-fakebuy {
+            position: fixed; left: 18px; bottom: 18px; z-index: 2147483000;
+            background: var(--c-bg, #fff); color: var(--c-ink); border: 1px solid var(--c-line); border-radius: 10px;
+            box-shadow: 0 8px 28px -6px rgba(0,0,0,.28); padding: 11px 14px;
+            display: flex; align-items: center; gap: 10px; max-width: 290px;
+            font-family: var(--font-body); opacity: 0; transform: translateY(14px);
+            pointer-events: none; transition: opacity .35s ease, transform .35s ease;
+        }
+        .q-fakebuy.show { opacity: 1; transform: translateY(0); }
+        .q-fakebuy > i { font-size: 22px; color: var(--c-ink); flex-shrink: 0; }
+        .q-fakebuy strong { font-size: 12.5px; font-weight: 700; }
+        .q-fakebuy > div { display: flex; flex-direction: column; line-height: 1.35; }
+        .q-fakebuy span { font-size: 10.5px; color: var(--c-muted); }
+        @media (max-width:560px){ .q-fakebuy{ left:12px; right:12px; bottom:12px; max-width:none; } }
+        .q-btn-buy-now {
+            background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink);
+            width: 100%; padding: 17px 18px; font-family: var(--font-body);
+            font-weight: 700; font-size: 15px; letter-spacing: .2px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            border-radius: 14px; transition: .2s; line-height: 1.2;
+        }
+        .q-btn-buy-now:hover { opacity: .88; }
+        .q-btn-buy-now .q-buy-price { font-weight: 800; white-space: nowrap; }
+        .q-buy-trust {
+            text-align: center; font-size: 11px; color: var(--c-muted);
+            margin-top: 2px; letter-spacing: .2px;
+        }
 
         /* ── Related products ── */
         #q-related-products { padding: 0 28px 28px; }
@@ -630,7 +651,7 @@
         }
         .q-related-card img {
             width: 100%; aspect-ratio: 1/1; object-fit: cover;
-            border: 1px solid var(--c-line); display: block; border-radius: 16px;
+            border: 1px solid var(--c-line); display: block; border-radius: 3px;
         }
         .q-related-card-name {
             font-size: 10px; font-weight: 500; line-height: 1.4; color: var(--c-ink);
@@ -680,7 +701,7 @@
             padding: 52px 28px;
         }
         #q-step-error h2 {
-            font-family: var(--font-display); font-size: 22px;
+            font-family: var(--font-display); font-size: 18px;
             letter-spacing: 3px; text-transform: uppercase; margin: 0; font-weight: 400;
         }
         #q-step-error p { font-size: 13px; color: var(--c-muted); margin: 0; line-height: 1.6; }
@@ -697,7 +718,7 @@
 
 
     // ─── IMAGEM DO BOTÃO (trigger) ─────────────────────────────────────────────
-    const stampImageHTML = `<span>Provador Virtual</span>`;
+    const stampImageHTML = `<img src="https://cdn.shopify.com/s/files/1/0636/6334/1746/files/logo_provador.png?v=1772494793" alt="Provador Virtual" style="width:100%;height:100%;object-fit:contain;">`;
 
 
 
@@ -723,14 +744,6 @@
                             <span class="q-field-label">Seu WhatsApp<span class="q-required-mark">*</span></span>
                             <input type="tel" id="q-phone" class="q-input" placeholder="(11) 99999-9999" maxlength="15">
                             <div id="q-phone-error" class="q-status-msg">N&#250;mero inv&#225;lido</div>
-                            <div id="q-provas-restantes" class="q-provas-msg"></div>
-                        </div>
-
-                        <!-- Seletor de fotos do produto desativado (Merlin Moore usa imagem atual da variante) -->
-                        <div id="q-photo-selector-group" style="display:none;">
-                            <div id="q-photo-thumbs"></div>
-                            <button type="button" id="q-photo-arrow-left" style="display:none;"></button>
-                            <button type="button" id="q-photo-arrow-right" style="display:none;"></button>
                         </div>
 
                         <!-- Photo section -->
@@ -778,7 +791,6 @@
                     <div id="q-step-pix">
                         <h2>Prova Extra</h2>
                         <p class="q-pix-subtitle">Limite de 3 provas atingido.<br>Pague R$1 via PIX para mais uma:</p>
-                        <p style="font-size: 11px; color: var(--c-muted); margin: 8px 0 0; line-height: 1.5; text-align: center;">&#8505;&#65039; Cobran&#231;a feita pela Provou Levou, n&#227;o pela loja</p>
                         <div class="q-pix-qr"><img id="q-pix-qr-img" alt="QR Code PIX"></div>
                         <div class="q-pix-copiacola">
                             <input type="text" id="q-pix-code" readonly placeholder="C&#243;digo PIX...">
@@ -807,11 +819,18 @@
                             <img id="q-final-view-img">
                         </div>
                         <div id="q-result-actions-col">
-                            <div id="q-provas-restantes-result" class="q-provas-msg" style="text-align:center;margin-bottom:8px;"></div>
-                            <button class="q-btn-outline" id="q-btn-back">Voltar ao Produto</button>
-                            <button class="q-btn-black" id="q-btn-choose-lenses" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-bottom:12px;">
-                                ESCOLHER LENTES E COMPRAR
-                            </button>
+                            <div class="q-fakebuy" id="q-fakebuy"></div>
+                            <div class="q-result-prodinfo" id="q-result-prodinfo" style="display:none;">
+                                <div class="q-result-prodname" id="q-result-prodname"></div>
+                                <div class="q-result-prodprice" id="q-result-prodprice"></div>
+                                <div class="q-result-installment" id="q-result-installment"></div>
+                                <div class="q-scarcity" id="q-scarcity" style="display:none;"><i class="ph-bold ph-fire"></i> APENAS <strong id="q-scarcity-n"></strong>&nbsp;UNIDADES RESTANTES</div>
+                            </div>
+                            <div class="q-seals" id="q-seals" style="display:none;">
+                                <div class="q-seal"><i class="ph-fill ph-shield-check"></i><span>Compra<br>Segura</span></div>
+                                <div class="q-seal"><i class="ph-fill ph-lock-key"></i><span>Pagamento<br>Seguro</span></div>
+                            </div>
+                            <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Agora</button>
                             <div id="q-related-products" style="display:none;">
                                 <h4>Veja tamb&eacute;m</h4>
                                 <div class="q-related-grid" id="q-related-grid"></div>
@@ -839,6 +858,166 @@
     // ─── INIT ─────────────────────────────────────────────────────────────────────
 
 
+    // ─── CTA DE COMPRA NO RESULTADO ───────────────────────────────────────────────
+
+    // Caminho do checkout da Nuvemshop. Se na loja o checkout direto não abrir,
+    // troque para '/comprar/' por '/carrinho' (1 linha) — é o único ponto a validar ao vivo.
+    var Q_CHECKOUT_URL = '/comprar/';
+
+    function getMainPrice() {
+        // 1) preço exibido na página (vários temas Nuvemshop)
+        var sel = '.js-price-display, [data-product-price], .product__price .price, .js-product-price, .price-display';
+        var el = document.querySelector(sel);
+        if (el) {
+            var t = (el.getAttribute('data-product-price') || el.textContent || '').trim();
+            if (t && /\d/.test(t)) {
+                // normaliza "R$ 289,00" / "28900" -> "R$ 289,00"
+                if (/^\d+$/.test(t)) { var n = (parseInt(t,10)/100).toFixed(2).replace('.',','); return 'R$ ' + n; }
+                return t.replace(/\s+/g,' ');
+            }
+        }
+        // 2) fallback: data-variants do produto principal (mesmo formato dos "Veja também")
+        var dv = document.querySelector('[data-variants]');
+        if (dv) {
+            try { var v = JSON.parse(dv.getAttribute('data-variants'))[0]; if (v && v.price_short) return v.price_short; } catch (e) {}
+        }
+        return '';
+    }
+
+    function findStoreBuyBtn() {
+        return document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], button[type="submit"].js-addtocart');
+    }
+
+    // Acha o form de produto real (o que tem o input add_to_cart = product_id)
+    function getProductForm() {
+        var f = document.getElementById('product_form');
+        if (f && f.querySelector('input[name="add_to_cart"]')) return f;
+        var inp = document.querySelector('input[name="add_to_cart"]');
+        if (inp && inp.closest('form')) return inp.closest('form');
+        return document.querySelector('form.js-product-form');
+    }
+
+    // Compra de verdade: submete uma CÓPIA do form do produto (POST real).
+    // A Nuvemshop só adiciona ao carrinho via POST — o GET antigo abria o
+    // carrinho vazio. O clone não tem o AJAX do tema, então faz POST nativo:
+    // servidor adiciona o item e redireciona pro carrinho JÁ com o produto.
+    function buyNow() {
+        // Tracking: registra o clique em "Comprar Agora" (marca carrinho_adicionado na prova)
+        try {
+            var _tp = (document.getElementById('q-phone') || {}).value || '';
+            var _td = (document.querySelector('h1.product__title,.product-single__title,h1') || {}).innerText || document.title || '';
+            fetch('https://n8n.segredosdodrop.com/webhook/pl-provador-buy-click', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone: _tp, origin: location.origin, produto: _td }) }).catch(function () {});
+        } catch (e) {}
+        var src = getProductForm();
+        if (src) {
+            var clone = document.createElement('form');
+            clone.method = 'post';
+            clone.action = src.getAttribute('action') || '/comprar/';
+            clone.style.display = 'none';
+            src.querySelectorAll('input, select, textarea').forEach(function (el) {
+                if (!el.name) return;
+                if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) return;
+                var h = document.createElement('input');
+                h.type = 'hidden'; h.name = el.name; h.value = el.value;
+                clone.appendChild(h);
+            });
+            if (!clone.querySelector('[name="quantity"]')) {
+                var q = document.createElement('input');
+                q.type = 'hidden'; q.name = 'quantity'; q.value = '1';
+                clone.appendChild(q);
+            }
+            document.body.appendChild(clone);
+            clone.submit();
+            return;
+        }
+        // Fallback: botão nativo da loja
+        var sb = findStoreBuyBtn();
+        if (sb) { try { sb.click(); } catch (e) {} }
+    }
+
+    // Escassez — número estável por produto (não muda a cada refresh)
+    function scarcityCount(name) {
+        var h = 5381, s = String(name || '');
+        for (var i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) >>> 0;
+        return 2 + (h % 6); // 2..7
+    }
+    // Notificações de compra (prova social)
+    var Q_FAKE_NAMES = ['Ana C.','Carlos M.','Mariana S.','João P.','Beatriz R.','Pedro A.','Juliana F.','Lucas T.','Fernanda L.','Rafael O.','Camila N.','Bruno G.','Larissa D.','Gabriel V.','Patrícia H.','Thiago B.','Aline M.','Rodrigo S.','Vanessa P.','Felipe C.','Letícia M.','Marcos A.'];
+    var Q_FAKE_WHEN = ['agora mesmo','há 1 minuto','há 2 minutos','há 4 minutos','há 6 minutos','há 9 minutos','há 12 minutos'];
+    var _fakeBuyTimer = null;
+    function _showFakeBuy() {
+        var step = document.getElementById('q-step-result');
+        var el = document.getElementById('q-fakebuy');
+        if (!el || !step || step.style.display === 'none') return;
+        var nm = Q_FAKE_NAMES[Math.floor(Math.random() * Q_FAKE_NAMES.length)];
+        var wh = Q_FAKE_WHEN[Math.floor(Math.random() * Q_FAKE_WHEN.length)];
+        el.innerHTML = '<i class="ph-fill ph-shopping-bag"></i><div><span style="font-size:12.5px;color:var(--c-ink);"><strong>' + nm + '</strong> comprou este produto</span><span>' + wh + ' &middot; compra verificada</span></div>';
+        el.classList.add('show');
+        clearTimeout(el._hideT);
+        el._hideT = setTimeout(function () { el.classList.remove('show'); }, 4500);
+    }
+    function startFakeBuy() {
+        stopFakeBuy();
+        setTimeout(_showFakeBuy, 3000);
+        _fakeBuyTimer = setInterval(_showFakeBuy, 12000);
+    }
+    function stopFakeBuy() {
+        if (_fakeBuyTimer) { clearInterval(_fakeBuyTimer); _fakeBuyTimer = null; }
+        var el = document.getElementById('q-fakebuy'); if (el) el.classList.remove('show');
+    }
+
+    // Parcelamento — o MESMO da pagina: pega a MAIOR parcela do produto ("em ate Nx de R$ X").
+    // Le do data-variants (mesma fonte do preco). installments_data vem como STRING JSON aninhada.
+    function getInstallment() {
+        var dv = document.querySelector('[data-variants]');
+        if (!dv) return '';
+        try {
+            var v = JSON.parse(dv.getAttribute('data-variants'))[0];
+            var idata = v.installments_data;
+            if (!idata) return '';
+            if (typeof idata === 'string') idata = JSON.parse(idata);
+            var plans = idata[Object.keys(idata)[0]];
+            if (!plans) return '';
+            var best = null;
+            Object.keys(plans).forEach(function (k) {
+                var n = parseInt(k, 10);
+                var p = plans[k];
+                if (n >= 2 && p.installment_value > 0 && (!best || n > best.n)) best = { n: n, val: p.installment_value };
+            });
+            if (best) return best.n + 'x de R$ ' + Number(best.val).toFixed(2).replace('.', ',');
+        } catch (e) {}
+        return '';
+    }
+
+    function populateBuyCta() {
+        var btn = document.getElementById('q-btn-buy-now');
+        var trust = document.getElementById('q-seals');
+        if (!btn) return;
+        // Nome + valor do produto acima do botão
+        var price = getMainPrice();
+        var prodName = (document.querySelector('h1.product__title,.product-single__title,h1') || {}).innerText || document.title || '';
+        var info = document.getElementById('q-result-prodinfo');
+        var nameEl = document.getElementById('q-result-prodname');
+        var priceEl = document.getElementById('q-result-prodprice');
+        if (nameEl) nameEl.textContent = (prodName || '').trim();
+        if (priceEl) priceEl.textContent = price || '';
+        var instEl = document.getElementById('q-result-installment');
+        if (instEl) { var _inst = getInstallment(); instEl.textContent = _inst; instEl.style.display = _inst ? 'block' : 'none'; }
+        if (info && ((prodName || '').trim() || price)) info.style.display = 'block';
+        // Escassez
+        var sc = document.getElementById('q-scarcity');
+        var scn = document.getElementById('q-scarcity-n');
+        if (sc && scn && (prodName || '').trim()) { scn.textContent = scarcityCount(prodName); sc.style.display = 'flex'; }
+        // Notificações de compra: desativadas em todos os provadores
+        btn.style.display = 'flex';
+        if (trust) trust.style.display = 'flex';
+        btn.onclick = buyNow;
+    }
+
+
+    // ─── INIT ─────────────────────────────────────────────────────────────────────
+
+
     function init() {
         // --- FILTRO DE CATEGORIA (HAT) ---
         const productNameNormalized = (document.querySelector('h1.product__title,.product-single__title,h1')?.innerText || document.title).toUpperCase();
@@ -847,10 +1026,6 @@
         }
 
         // Fontes (async, não bloqueia render)
-        const fontLink = document.createElement('link');
-        fontLink.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap';
-        fontLink.rel = 'stylesheet';
-        document.head.appendChild(fontLink);
 
         // Phosphor Icons — carregado lazily na primeira abertura do modal
         // (não carrega na init para não impactar o tempo de carregamento da página)
@@ -863,6 +1038,16 @@
         modalContainer.innerHTML = html;
         document.body.appendChild(modalContainer);
 
+        // Usa a MESMA FONTE da loja no provador (em vez de Bebas Neue / DM Sans)
+        try {
+            var _bodyF = getComputedStyle(document.body).fontFamily;
+            var _h = document.querySelector('h1.product__title,.product-single__title,h1,h2');
+            var _headF = _h ? getComputedStyle(_h).fontFamily : _bodyF;
+            var _root = document.documentElement;
+            if (_bodyF) _root.style.setProperty('--font-body', _bodyF);
+            if (_headF) _root.style.setProperty('--font-display', _headF);
+        } catch (e) {}
+
 
         // ── Botão imagem PNG ──
         const openBtn = document.createElement('button');
@@ -872,23 +1057,7 @@
         openBtn.innerHTML = stampImageHTML;
 
 
-        // Selectors prioritizando Shopify (Merlin Moore) primeiro, depois Nuvemshop fallback
-        // Desktop: prende na PRIMEIRA foto do grid (.image-high:first-child)
-        // Mobile: prende no slot da foto visível (.mobile-selected-image)
-        const _isMobile = window.matchMedia('(max-width: 999px)').matches;
-        const imgContainers = _isMobile ? [
-            '.mobile-selected-image',
-            '.custom-product-medias',
-            '.product__media-wrapper', '.product__media', '.product__media-item',
-            '.product-gallery', '.product-gallery__media',
-            '.product-single__media', '.media-gallery'
-        ] : [
-            '.custom-product-images-highlight',
-            '.custom-product-medias',
-            '.product__media-wrapper', '.product__media', '.product__media-item',
-            '.product-gallery', '.product-gallery__media',
-            '.product-single__media', '.media-gallery'
-        ];
+        const imgContainers = ['.js-product-slide', '.product-image-column', '.js-swiper-product', '[data-store^="product-image-"]', '.product__media-wrapper', '.product-gallery__media', '.product__media', '.product-image-main', '.product-media-container', '[data-media-id]', '.product__media-item', '.product-gallery', '.product-single__media', '.media-gallery'];
 
         function tryPlaceTriggerBtn() {
             // 1ª prioridade: container que tenha <img> dentro (evita cair em slide de vídeo)
@@ -925,7 +1094,7 @@
             setTimeout(() => {
                 observer.disconnect();
                 if (!openBtn.isConnected) {
-                    openBtn.style.cssText = 'position:fixed;top:20px;left:20px;z-index:100;';
+                    openBtn.style.cssText = 'position:fixed;bottom:30px;right:20px;top:auto;z-index:100;';
                     document.body.appendChild(openBtn);
                 }
             }, 5000);
@@ -934,7 +1103,78 @@
 
         const modal = document.getElementById('q-modal-ia');
 
-        // Botão inline DESATIVADO na Merlin Moore — só o pill flutuante sobre a foto
+        // ── Botão inline acima do botão de compra ──
+        const inlineBtn = document.createElement('button');
+        inlineBtn.className = 'q-btn-inline-provador';
+        inlineBtn.type = 'button';
+
+        const inlineSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        inlineSvg.setAttribute('viewBox', '0 0 24 24');
+        inlineSvg.setAttribute('fill', 'none');
+        inlineSvg.setAttribute('stroke', 'currentColor');
+        inlineSvg.setAttribute('stroke-width', '1.5');
+        inlineSvg.setAttribute('stroke-linecap', 'round');
+        inlineSvg.setAttribute('stroke-linejoin', 'round');
+        const path1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path1.setAttribute('d', 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2');
+        const circle1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle1.setAttribute('cx', '12');
+        circle1.setAttribute('cy', '7');
+        circle1.setAttribute('r', '4');
+        inlineSvg.appendChild(path1);
+        inlineSvg.appendChild(circle1);
+        inlineBtn.appendChild(inlineSvg);
+
+        const inlineBtnText = document.createTextNode('Provador Virtual');
+        inlineBtn.appendChild(inlineBtnText);
+
+        inlineBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const prodName = document.querySelector('h1.product__title,.product-single__title,h1')?.innerText || document.title;
+            applyProduct(detectProduct(prodName));
+            populateImageSelector();
+            openModal();
+        });
+
+        // Posiciona acima do botão de compra — com retry + re-inserção
+        // (temas Nuvemshop que hidratam/re-renderizam a área de compra após o load
+        //  removem o botão inline se ele for inserido só uma vez).
+        function tryPlaceInlineBtn() {
+            if (inlineBtn.isConnected) return true;
+            // Alvo preciso: o botão de compra PRINCIPAL do tema Nuvemshop (único na página).
+            let buyBtn = document.querySelector('[data-store="product-buy-button"]');
+            // Fallback: primeiro add-to-cart VISÍVEL (a página tem dezenas em carrosséis/quick-buy).
+            if (!buyBtn) {
+                const cands = document.querySelectorAll('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], [name="add"], form[action*="/cart/add"] button[type="submit"], button[type="submit"].button');
+                for (let k = 0; k < cands.length; k++) {
+                    if (cands[k].offsetParent !== null) { buyBtn = cands[k]; break; }
+                }
+                if (!buyBtn) {
+                    const _btns = document.querySelectorAll('button[type="submit"], button.button, a.button');
+                    for (let k = 0; k < _btns.length; k++) {
+                        const _t = (_btns[k].textContent || '').toLowerCase();
+                        if (_btns[k].offsetParent !== null && /carrinho|adicionar|comprar|add to cart/.test(_t)) { buyBtn = _btns[k]; break; }
+                    }
+                }
+                if (!buyBtn && cands.length) buyBtn = cands[0];
+            }
+            if (buyBtn && buyBtn.parentNode) {
+                buyBtn.parentNode.insertBefore(inlineBtn, buyBtn);
+                return true;
+            }
+            const variantsContainer = document.querySelector('.js-product-variants');
+            if (variantsContainer && variantsContainer.parentNode) {
+                variantsContainer.parentNode.insertBefore(inlineBtn, variantsContainer.nextSibling);
+                return true;
+            }
+            return false;
+        }
+        tryPlaceInlineBtn();
+        // Observa o DOM por até 15s: re-insere se o tema apagar ou se o alvo só aparecer depois.
+        const _inlineObs = new MutationObserver(() => { tryPlaceInlineBtn(); });
+        _inlineObs.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => { _inlineObs.disconnect(); }, 15000);
         const genBtn      = document.getElementById('q-btn-generate');
         const nextBtn     = null; // single-step flow — no next button
         const phoneStep   = null;
@@ -947,15 +1187,12 @@
         const cameraInput = document.getElementById('q-camera-input');
         const galleryInput= document.getElementById('q-gallery-input');
         const phoneInput  = document.getElementById('q-phone');
-        const preImg      = document.getElementById('q-pre-img');
-        const facePlaceholder = document.getElementById('q-face-placeholder');
 
         // ── Pré-preenche último número usado (localStorage) ──
         const _PL_LAST_PHONE = 'pl_last_phone';
         try {
             const saved = localStorage.getItem(_PL_LAST_PHONE);
             if (saved && /^\d{10,11}$/.test(saved)) {
-                // formata pra (XX) XXXXX-XXXX
                 const m = saved.match(/(\d{2})(\d{4,5})(\d{4})/);
                 if (m) phoneInput.value = '(' + m[1] + ') ' + m[2] + '-' + m[3];
             }
@@ -967,6 +1204,8 @@
             }
         }
         phoneInput.addEventListener('blur', _savePhoneIfValid);
+        const preImg      = document.getElementById('q-pre-img');
+        const facePlaceholder = document.getElementById('q-face-placeholder');
 
         // keep realInput alias so PIX code still works
         const realInput   = galleryInput;
@@ -984,7 +1223,7 @@
         }
 
         function extractImages() {
-            const containersSelectors = '.custom-product-images-highlight, .mobile-selected-image, .custom-product-medias, .js-product-slide, .product-image-column, .js-swiper-product, [data-store^="product-image-"], .product__media-wrapper, .product-gallery__media, .product__media, .product-image-main, .product-media-container, [data-media-id], .product__media-item, .product-gallery, .product-single__media, .media-gallery, [data-component="product.gallery"], .swiper-slide:not(.swiper-slide-duplicate), .slider-wrapper';
+            const containersSelectors = '.js-product-slide, .product-image-column, .js-swiper-product, [data-store^="product-image-"], .product__media-wrapper, .product-gallery__media, .product__media, .product-image-main, .product-media-container, [data-media-id], .product__media-item, .product-gallery, .product-single__media, .media-gallery, [data-component="product.gallery"], .swiper-slide:not(.swiper-slide-duplicate), .slider-wrapper';
             const possibleContainers = Array.from(document.querySelectorAll(containersSelectors));
             let imgEls = [];
             possibleContainers.forEach(c => {
@@ -1033,65 +1272,9 @@
         }
 
         function populateImageSelector() {
+            // Sem escolha dentro do provador: usa sempre a imagem principal do produto.
             const imgs = extractImages();
-            const group = document.getElementById('q-photo-selector-group');
-            const thumbs = document.getElementById('q-photo-thumbs');
-            const arrowL = document.getElementById('q-photo-arrow-left');
-            const arrowR = document.getElementById('q-photo-arrow-right');
-
             selectedProductImgUrl = imgs[0] || '';
-
-            if (!group || !thumbs || imgs.length <= 1) {
-                if (group) group.classList.remove('is-visible');
-                return;
-            }
-
-            while (thumbs.firstChild) thumbs.removeChild(thumbs.firstChild);
-            imgs.forEach((url, idx) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'q-photo-thumb' + (idx === 0 ? ' is-selected' : '');
-                btn.dataset.url = url;
-                btn.setAttribute('aria-label', 'Foto ' + (idx + 1));
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'Foto ' + (idx + 1);
-                img.loading = 'lazy';
-                const check = document.createElement('span');
-                check.className = 'q-photo-thumb-check';
-                check.textContent = '✓';
-                btn.appendChild(img);
-                btn.appendChild(check);
-                btn.addEventListener('click', () => {
-                    selectedProductImgUrl = url;
-                    thumbs.querySelectorAll('.q-photo-thumb').forEach(t => t.classList.remove('is-selected'));
-                    btn.classList.add('is-selected');
-                });
-                thumbs.appendChild(btn);
-            });
-
-            group.classList.add('is-visible');
-
-            // Carrossel: setas só aparecem quando há overflow
-            if (arrowL && arrowR) {
-                const update = () => {
-                    const overflow = thumbs.scrollWidth > thumbs.clientWidth + 1;
-                    arrowL.classList.toggle('is-active', overflow);
-                    arrowR.classList.toggle('is-active', overflow);
-                    arrowL.disabled = thumbs.scrollLeft <= 0;
-                    arrowR.disabled = thumbs.scrollLeft >= thumbs.scrollWidth - thumbs.clientWidth - 1;
-                };
-                thumbs.onscroll = update;
-                window.addEventListener('resize', update);
-                requestAnimationFrame(update);
-
-                const slide = (dir) => {
-                    const amount = thumbs.clientWidth * 0.7;
-                    thumbs.scrollBy({ left: dir * amount, behavior: 'smooth' });
-                };
-                arrowL.onclick = () => slide(-1);
-                arrowR.onclick = () => slide(1);
-            }
         }
 
         function openModal() {
@@ -1110,6 +1293,7 @@
         function closeModal() {
             modal.style.display = 'none';
             unlockBodyScroll();
+            try { stopFakeBuy(); } catch (e) {}
         }
 
 
@@ -1131,24 +1315,24 @@
 
 
         closeBtn.onclick = () => closeModal();
-        backBtn.onclick = () => closeModal();
+        if (backBtn) backBtn.onclick = () => closeModal();
 
-        const chooseLensesBtn = document.getElementById('q-btn-choose-lenses');
-        if (chooseLensesBtn) {
-            chooseLensesBtn.onclick = () => {
-                const openProductLensBtn = document.querySelector('.openProductLens');
-                if (openProductLensBtn) {
-                    closeModal();
-                    setTimeout(() => {
-                        openProductLensBtn.click();
-                    }, 100);
-                }
-            };
-        }
 
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
+
+
+        if (retryBtn) retryBtn.onclick = () => {
+            document.getElementById('q-step-result').style.display = 'none';
+            photoStep.style.display = 'flex';
+            document.querySelector('.q-card-ia').classList.remove('is-result');
+            userPhoto = null;
+            pixPaymentId = null;
+            preImg.style.display = 'none';
+            if (facePlaceholder) facePlaceholder.style.display = 'flex';
+            checkFields();
+        };
 
         // Camera / gallery buttons
         document.getElementById('q-btn-camera').onclick = function() { cameraInput.click(); };
@@ -1166,7 +1350,7 @@
 
             items.forEach(function(item) {
                 if (products.length >= 3) return;
-                var container = item.querySelector('[data-variants]');
+                var container = item.matches('[data-variants]') ? item : item.querySelector('[data-variants]');
                 if (!container) return;
                 try {
                     var variants = JSON.parse(container.getAttribute('data-variants'));
@@ -1187,9 +1371,26 @@
                 } catch(e) {}
             });
 
-            // Recomendações removidas para Merlin Moore — usar apenas "ESCOLHER LENTES E COMPRAR"
-            // Não mostrar produtos relacionados
-            section.style.display = 'none';
+            if (!products.length) return;
+
+            while (grid.firstChild) grid.removeChild(grid.firstChild);
+            products.forEach(function(p) {
+                var a = document.createElement('a');
+                a.className = 'q-related-card';
+                a.href = p.link || '#';
+                a.target = '_blank';
+                var img = document.createElement('img');
+                img.src = p.img;
+                img.alt = p.name;
+                img.loading = 'lazy';
+                var nameEl = document.createElement('span');
+                nameEl.className = 'q-related-card-name';
+                nameEl.textContent = p.name;
+                a.appendChild(img);
+                a.appendChild(nameEl);
+                grid.appendChild(a);
+            });
+            section.style.display = 'block';
         }
 
         function showError() {
@@ -1231,38 +1432,6 @@
             phoneInput.style.borderColor = (phoneInput.value.length > 0 && !phoneOk) ? '#ef4444' : 'var(--q-border)';
             checkFields();
         }
-
-        // ── Contador de provas restantes (debounced) ──
-        let _provasDebounce;
-        async function _checkProvasRestantes() {
-            const _els = document.querySelectorAll('.q-provas-msg');
-            if (!_els.length) return;
-            const nums = phoneInput.value.replace(/\D/g, '');
-            const phoneOk = isValidBRPhone(nums);
-            const phone = phoneOk ? '55' + nums : '0';
-            try {
-                const r = await fetch(WEBHOOK_CHECK_LIMIT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone })
-                });
-                const d = await r.json();
-                const used = Math.max(d.phone_count || 0, d.ip_count || 0, d.count || 0);
-                const restantes = Math.max(0, 3 - used);
-                if (false && restantes > 0) {
-                    const _txt = restantes + (restantes === 1 ? ' prova restante hoje' : ' provas restantes hoje');
-                    _els.forEach(el => { el.textContent = _txt; el.classList.remove('is-warn'); });
-                } else {
-                    _els.forEach(el => { el.textContent = ''; el.classList.remove('is-warn'); });
-                }
-            } catch(_) { _els.forEach(el => { el.textContent = ''; el.classList.remove('is-warn'); }); }
-        }
-        phoneInput.addEventListener('input', () => {
-            clearTimeout(_provasDebounce);
-            _provasDebounce = setTimeout(_checkProvasRestantes, 600);
-        });
-        // chama uma vez ao abrir o modal pra mostrar provas baseadas no IP
-        setTimeout(_checkProvasRestantes, 300);
 
         function checkFields() {
             const nums = phoneInput.value.replace(/\D/g, '');
@@ -1326,6 +1495,7 @@
             document.getElementById('q-step-pix').style.display = 'none';
         }
 
+        
         // ── PIX pendente em localStorage (evita cobrar duas vezes) ──
         const _PIX_LS_KEY = 'pl_pix_pending_v1';
         const _PIX_TTL_MS = 25 * 60 * 1000; // PIX MP expira em 30min
@@ -1362,22 +1532,35 @@
 
         async function createPixAndPoll() {
             showPixScreen();
-            const phone = '55' + phoneInput.value.replace(/\D/g, '');
             try {
                 let pix;
-                const pending = _pixLoadPending(phone);
+
+                const _ppPhone = '55' + phoneInput.value.replace(/\D/g, '');
+
+                const pending = _pixLoadPending(_ppPhone);
+
                 if (pending) {
-                    // Reaproveita PIX pendente — evita cobrar de novo
+
                     pix = { payment_id: pending.payment_id, qr_code: pending.qr_code, qr_code_base64: pending.qr_code_base64 };
+
                 } else {
+
                     const resp = await fetch(WEBHOOK_PIX, {
+
                         method: 'POST',
+
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: 'cliente@provoulevou.com.br', phone, loja: 'merlinmoore', origin: location.origin })
+
+                        body: JSON.stringify({ email: 'cliente@provoulevou.com.br', phone: '55' + phoneInput.value.replace(/\D/g, ''), loja: 'merlinmoore', origin: location.origin })
+
                     });
+
                     pix = await resp.json();
+
                     if (!pix.payment_id || !pix.qr_code) throw new Error('PIX inválido');
-                    _pixSavePending(phone, pix.payment_id, pix.qr_code, pix.qr_code_base64);
+
+                    _pixSavePending(_ppPhone, pix.payment_id, pix.qr_code, pix.qr_code_base64);
+
                 }
 
                 document.getElementById('q-pix-qr-img').src = 'data:image/png;base64,' + pix.qr_code_base64;
@@ -1393,7 +1576,7 @@
                         const st = await sr.json();
                         if (st.status === 'approved') {
                             stopPixPolling();
-                            _pixClearPending(phone);
+                            _pixClearPending(_ppPhone);
                             document.getElementById('q-pix-status-msg').textContent = 'Pagamento confirmado!';
                             document.getElementById('q-pix-status-msg').className = 'q-pix-status q-pix-approved';
                             setTimeout(() => {
@@ -1457,8 +1640,7 @@
                         return;
                     }
 const fd = new FormData();
-                    const personResized = await resizeImage(userPhoto, 1024).catch(() => userPhoto);
-                    fd.append('person_image', await toJpeg(personResized), 'person.jpg');
+                    fd.append('person_image', await toJpeg(userPhoto), 'person.jpg');
                     fd.append('whatsapp', '55' + phoneInput.value.replace(/\D/g, ''));
                     fd.append('phone_raw', phoneInput.value);
                     fd.append('product_name', prodName);
@@ -1478,38 +1660,10 @@ const fd = new FormData();
                         fd.append('quadril', '');
                     }
 
-                    // Coleta até 4 fotos do produto: 1ª como binary (compat), 2ª-4ª como base64 text.
-                    // 1ª = prodImg (escolhida pelo cliente ou default); demais = extractImages() exceto a 1ª.
-                    let allProdImgs = [];
-                    if (prodImg) allProdImgs.push(prodImg);
-                    try {
-                        if (typeof extractImages === 'function') {
-                            const extra = extractImages();
-                            for (const u of extra) {
-                                const cleanU = String(u || '').split('?')[0];
-                                if (!allProdImgs.some(p => String(p).split('?')[0] === cleanU)) {
-                                    allProdImgs.push(u);
-                                }
-                            }
-                        }
-                    } catch (_) {}
-                    allProdImgs = allProdImgs.slice(0, 4);
-                    console.log('[PL Merlin Moore] Enviando', allProdImgs.length, 'fotos do produto');
-                    for (let _pi = 0; _pi < allProdImgs.length; _pi++) {
+                    if (prodImg) {
                         try {
-                            const _bRaw = await fetch(allProdImgs[_pi]).then(r => r.blob());
-                            const _b = await resizeImage(_bRaw, 1024).catch(() => _bRaw);
-                            if (_pi === 0) {
-                                fd.append('product_image', _b, 'product.jpg');
-                            } else {
-                                const _b64 = await new Promise((resolve, reject) => {
-                                    const _r = new FileReader();
-                                    _r.onloadend = () => resolve(_r.result.split(',')[1]);
-                                    _r.onerror = reject;
-                                    _r.readAsDataURL(_b);
-                                });
-                                fd.append('product_image_' + (_pi+1) + '_b64', _b64);
-                            }
+                            const b = await fetch(prodImg).then(r => r.blob());
+                            fd.append('product_image', b, 'product.jpg');
                         } catch (_) { }
                     }
 
@@ -1538,7 +1692,12 @@ const fd = new FormData();
                         document.getElementById('q-final-view-img').src = URL.createObjectURL(blob);
                         document.querySelector('.q-card-ia').classList.add('is-result');
                         document.getElementById('q-step-result').style.display = 'flex';
-                        loadRelatedProducts();
+                        populateBuyCta();
+                        // Retry once depois de 1s caso slider tenha renderizado tarde
+                        setTimeout(function () {
+                            var sec = document.getElementById('q-related-products');
+                            if (sec && sec.style.display === 'none') loadRelatedProducts();
+                        }, 1000);
                     } else if (res.status === 401 || res.status === 403) {
                         document.getElementById('q-loading-box').style.display = 'none';
                         photoStep.style.display = 'flex';
@@ -1576,11 +1735,16 @@ const fd = new FormData();
 
             if (!userPhoto) return;
             const _gNums = (phoneInput.value || '').replace(/\D/g, '');
-            const _gPhoneOk = isValidBRPhone(_gNums);
+            const _gPhoneOk = (_gNums.length === 10 || _gNums.length === 11) && /^[1-9][1-9]/.test(_gNums) && (_gNums.length === 10 || _gNums[2] === '9');
             if (!_gPhoneOk) { phoneInput.focus(); return; }
 
             const phone = '55' + phoneInput.value.replace(/\D/g, '');
             genBtn.disabled = true;
+
+            // Feedback imediato: mostra a animacao na hora; o check de limite roda enquanto ela ja aparece.
+            try { uploadStep.style.display = 'none'; } catch (_) {}
+            try { document.getElementById('q-loading-box').style.display = 'flex'; } catch (_) {}
+
 
             try {
                 const resp = await fetch(WEBHOOK_CHECK_LIMIT, {
@@ -1590,6 +1754,7 @@ const fd = new FormData();
                 });
                 const data = await resp.json();
                 if (data.limited) {
+            try { document.getElementById('q-loading-box').style.display = 'none'; } catch (_) {}
                     genBtn.disabled = false;
                     createPixAndPoll();
                     return;
