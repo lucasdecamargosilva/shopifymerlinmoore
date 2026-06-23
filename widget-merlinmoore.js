@@ -171,7 +171,7 @@
         /* ── Trigger (selo sobre foto) ── */
         @keyframes q-shake { 0%,50%,100%{transform:rotate(0deg)} 10%,30%{transform:rotate(-10deg)} 20%,40%{transform:rotate(10deg)} }
         .q-btn-trigger-ia {
-            position: absolute; top: 60px; right: 14px; z-index: 100;
+            position: absolute; top: 14px; right: 14px; z-index: 2;
             background: none; border: none; padding: 0; cursor: pointer;
             width: 70px; height: 70px;
             display: flex; align-items: center; justify-content: center;
@@ -865,6 +865,13 @@
     var Q_CHECKOUT_URL = '/comprar/';
 
     function getMainPrice() {
+        // 0) Shopify (Merlin): <sale-price> dentro de price-list--product
+        var _sp = document.querySelector('.price-list--product sale-price, .price-list--product .price, sale-price');
+        if (_sp) {
+            var _st = (_sp.textContent || '').replace(/Preço\s+(promocional|normal)/gi, ' ');
+            var _m = _st.match(/R?\$\s?[\d.]+,\d{2}/);
+            if (_m) return _m[0].replace(/^\$/, 'R$ ').replace(/^R\$(?=\d)/, 'R$ ');
+        }
         // 1) preço exibido na página (vários temas Nuvemshop)
         var sel = '.js-price-display, [data-product-price], .product__price .price, .js-product-price, .price-display';
         var el = document.querySelector(sel);
@@ -881,6 +888,9 @@
         if (dv) {
             try { var v = JSON.parse(dv.getAttribute('data-variants'))[0]; if (v && v.price_short) return v.price_short; } catch (e) {}
         }
+        // 3) fallback: meta product:price:amount (Shopify)
+        var _pm = document.querySelector('meta[property="product:price:amount"], meta[property="og:price:amount"]');
+        if (_pm && _pm.content && /\d/.test(_pm.content)) return 'R$ ' + _pm.content.trim();
         return '';
     }
 
@@ -969,6 +979,17 @@
     // Parcelamento — o MESMO da pagina: pega a MAIOR parcela do produto ("em ate Nx de R$ X").
     // Le do data-variants (mesma fonte do preco). installments_data vem como STRING JSON aninhada.
     function getInstallment() {
+        // 0) Shopify (Merlin): #parcelator / .parcelatorProduct ("12x de R$ 37,77")
+        var _pc = document.querySelector('#parcelator, .parcelatorProduct, .parcelator');
+        if (_pc) {
+            var _pt = (_pc.textContent || '').replace(/\s+/g, ' ').trim();
+            var _m = _pt.match(/\d{1,2}x\s*(?:de\s*)?R?\$?\s?[\d.]+,\d{2}/i);
+            if (_m) {
+                var _out = _m[0].replace(/\s+/g, ' ').trim();
+                if (/sem juros/i.test(_pt) && !/sem juros/i.test(_out)) _out += ' sem juros';
+                return _out;
+            }
+        }
         var dv = document.querySelector('[data-variants]');
         if (!dv) return '';
         try {
@@ -1057,7 +1078,7 @@
         openBtn.innerHTML = stampImageHTML;
 
 
-        const imgContainers = ['.product-gallery__media.is-initial', '.product-gallery__carousel .product-gallery__media', '.js-product-slide', '.product-image-column', '.js-swiper-product', '[data-store^="product-image-"]', '.product__media-wrapper', '.product-gallery__media', '.product__media', '.product-image-main', '.product-media-container', '[data-media-id]', '.product__media-item', '.product-gallery', '.product-single__media', '.media-gallery'];
+        const imgContainers = ['.product-gallery__image-list', '.product-gallery__media.is-initial', '.product-gallery__carousel .product-gallery__media', '.js-product-slide', '.product-image-column', '.js-swiper-product', '[data-store^="product-image-"]', '.product__media-wrapper', '.product-gallery__media', '.product__media', '.product-image-main', '.product-media-container', '[data-media-id]', '.product__media-item', '.product-gallery', '.product-single__media', '.media-gallery'];
 
         function tryPlaceTriggerBtn() {
             // 1ª prioridade: container que tenha <img> dentro (evita cair em slide de vídeo)
