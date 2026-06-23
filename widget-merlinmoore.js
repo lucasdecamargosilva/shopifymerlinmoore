@@ -1057,7 +1057,7 @@
         openBtn.innerHTML = stampImageHTML;
 
 
-        const imgContainers = ['.js-product-slide', '.product-image-column', '.js-swiper-product', '[data-store^="product-image-"]', '.product__media-wrapper', '.product-gallery__media', '.product__media', '.product-image-main', '.product-media-container', '[data-media-id]', '.product__media-item', '.product-gallery', '.product-single__media', '.media-gallery'];
+        const imgContainers = ['.product-gallery__media.is-initial', '.product-gallery__carousel .product-gallery__media', '.js-product-slide', '.product-image-column', '.js-swiper-product', '[data-store^="product-image-"]', '.product__media-wrapper', '.product-gallery__media', '.product__media', '.product-image-main', '.product-media-container', '[data-media-id]', '.product__media-item', '.product-gallery', '.product-single__media', '.media-gallery'];
 
         function tryPlaceTriggerBtn() {
             // 1ª prioridade: container que tenha <img> dentro (evita cair em slide de vídeo)
@@ -1146,7 +1146,7 @@
             let buyBtn = document.querySelector('[data-store="product-buy-button"]');
             // Fallback: primeiro add-to-cart VISÍVEL (a página tem dezenas em carrosséis/quick-buy).
             if (!buyBtn) {
-                const cands = document.querySelectorAll('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], [name="add"], form[action*="/cart/add"] button[type="submit"], button[type="submit"].button');
+                const cands = document.querySelectorAll('buy-buttons button[type="submit"], .js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], [name="add"], form[action*="/cart/add"] button[type="submit"], button[type="submit"].button');
                 for (let k = 0; k < cands.length; k++) {
                     if (cands[k].offsetParent !== null) { buyBtn = cands[k]; break; }
                 }
