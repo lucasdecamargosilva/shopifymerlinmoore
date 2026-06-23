@@ -927,13 +927,21 @@
         } catch (e) {}
         var src = getProductForm();
         if (src) {
-            // Shopify (Merlin): cart permalink com a variante selecionada -> adiciona e vai pro carrinho
+            // Shopify (Merlin): adiciona ao carrinho via AJAX e vai pro CARRINHO (nunca checkout direto)
             var _isShopify = !!src.querySelector('input[name="form_type"][value="product"]') || /\/cart\/add/.test(src.getAttribute('action') || '');
             if (_isShopify) {
                 var _idEl = src.querySelector('select[name="id"]') || src.querySelector('input[name="id"]:checked') || src.querySelector('input[name="id"]');
                 var _vid = _idEl && _idEl.value;
-                if (_vid) { window.location.href = location.origin + '/cart/' + _vid + ':1'; return; }
-                // sem variante: tenta o botão nativo da loja
+                if (_vid) {
+                    fetch(location.origin + '/cart/add.js', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: Number(_vid) || _vid, quantity: 1 })
+                    }).then(function () { window.location.href = location.origin + '/cart'; })
+                      .catch(function () { window.location.href = location.origin + '/cart'; });
+                    return;
+                }
+                // sem variante: tenta o botão nativo da loja (add to cart do tema)
                 var _nb = findStoreBuyBtn();
                 if (_nb) { try { _nb.click(); return; } catch (e) {} }
             }
