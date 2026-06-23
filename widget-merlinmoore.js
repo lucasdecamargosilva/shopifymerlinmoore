@@ -895,7 +895,7 @@
     }
 
     function findStoreBuyBtn() {
-        return document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], button[type="submit"].js-addtocart');
+        return document.querySelector('buy-buttons button[type="submit"], .js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"], button[type="submit"].js-addtocart, button[type="submit"].button');
     }
 
     // Acha o form de produto real (o que tem o input add_to_cart = product_id)
@@ -904,7 +904,14 @@
         if (f && f.querySelector('input[name="add_to_cart"]')) return f;
         var inp = document.querySelector('input[name="add_to_cart"]');
         if (inp && inp.closest('form')) return inp.closest('form');
-        return document.querySelector('form.js-product-form');
+        var nv = document.querySelector('form.js-product-form');
+        if (nv) return nv;
+        // Shopify (Merlin): form do produto (action /cart/add ou form_type=product)
+        var sf = document.querySelector('form[action*="/cart/add"]');
+        if (sf) return sf;
+        var ft = document.querySelector('input[name="form_type"][value="product"]');
+        if (ft && ft.closest('form')) return ft.closest('form');
+        return null;
     }
 
     // Compra de verdade: submete uma CÓPIA do form do produto (POST real).
@@ -920,6 +927,16 @@
         } catch (e) {}
         var src = getProductForm();
         if (src) {
+            // Shopify (Merlin): cart permalink com a variante selecionada -> adiciona e vai pro carrinho
+            var _isShopify = !!src.querySelector('input[name="form_type"][value="product"]') || /\/cart\/add/.test(src.getAttribute('action') || '');
+            if (_isShopify) {
+                var _idEl = src.querySelector('select[name="id"]') || src.querySelector('input[name="id"]:checked') || src.querySelector('input[name="id"]');
+                var _vid = _idEl && _idEl.value;
+                if (_vid) { window.location.href = location.origin + '/cart/' + _vid + ':1'; return; }
+                // sem variante: tenta o botão nativo da loja
+                var _nb = findStoreBuyBtn();
+                if (_nb) { try { _nb.click(); return; } catch (e) {} }
+            }
             var clone = document.createElement('form');
             clone.method = 'post';
             clone.action = src.getAttribute('action') || '/comprar/';
