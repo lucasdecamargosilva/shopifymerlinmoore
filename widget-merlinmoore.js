@@ -191,7 +191,7 @@
             border: 1.5px solid var(--c-ink); border-radius: 4px;
             font-family: 'Work Sans', var(--font-body), sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
             cursor: pointer; transition: background 0.25s, color 0.25s;
-            margin-bottom: 10px; box-sizing: border-box;
+            margin: 0 0 6px; box-sizing: border-box;
         }
         .q-btn-inline-provador:hover { background: var(--c-ink); color: #fff; }
         .q-btn-inline-provador svg { width: 14px; height: 14px; flex-shrink: 0; }
@@ -734,7 +734,7 @@
                     <!-- Persistent header (all steps) -->
                     <div id="q-header-provador">
                         <h1>Provador Virtual</h1>
-                        <img src="https://merlinmoore.com.br/cdn/shop/files/Ativo_1_7.svg?v=1756128583&width=280" alt="MERLIN MOORE" style="height:48px;width:auto;filter:brightness(0);"/>
+                        <img src="https://merlinmoore.com.br/cdn/shop/files/Ativo_1_7.svg?v=1756128583&width=280" alt="MERLIN MOORE" style="height:26px;width:auto;filter:brightness(0);"/>
                     </div>
 
                     <!-- Main step -->
