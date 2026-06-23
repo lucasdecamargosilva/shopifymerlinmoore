@@ -24,7 +24,7 @@
             try {
                 if (document.querySelector('.pl-seo-badge')) return;
                 var path = window.location.pathname;
-                var isProduct = path.includes('/produto/') || path.includes('/produtos/') || path.includes('/products/') || path.includes('/p/') || document.querySelector('meta[property="og:type"][content="product"]');
+                var isProduct = /\/(products|produtos|produto|product|p)\/[^/?#]+/.test(path) || !!document.querySelector('meta[property="og:type"][content="product"]');
                 if (!isProduct) return;
                 var b = document.createElement('div');
                 b.className = 'pl-seo-badge';
@@ -1604,7 +1604,7 @@ const fd = new FormData();
     }
 
     // ─── EXECUTA APENAS EM PÁGINAS DE PRODUTO ────────────────────────────────────
-    const isProductPage = window.location.pathname.includes('/products/') || window.location.pathname.includes('/product/') || window.location.pathname.includes('/produtos/') || window.location.pathname.includes('/produto/') || window.location.pathname.includes('/p/') || window.location.pathname.includes('preview.html') || document.querySelector('meta[property="og:type"][content="product"]');
+    const isProductPage = /\/(products|produtos|produto|product|p)\/[^/?#]+/.test(window.location.pathname) || window.location.pathname.includes('preview.html') || document.querySelector('meta[property="og:type"][content="product"]');
 
     if (isProductPage) {
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
