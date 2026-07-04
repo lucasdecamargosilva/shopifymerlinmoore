@@ -1051,7 +1051,7 @@
         if (nameEl) nameEl.textContent = (prodName || '').trim();
         if (priceEl) priceEl.textContent = price || '';
         var instEl = document.getElementById('q-result-installment');
-        if (instEl) { var _inst = getInstallment(); instEl.textContent = _inst; instEl.style.display = _inst ? 'block' : 'none'; }
+        if (instEl) { var _inst = getInstallment(); try { var _pm=getMainPrice(); var _pn=_pm?parseFloat(String(_pm).replace(/[^\d.,]/g,'').replace(/\.(?=\d{3}(?:\D|$))/g,'').replace(',','.')):0; var _mm=_inst&&_inst.match(/(\d+)\s*x\s*(?:de\s*)?R?\$?\s*([\d.,]+)/i); if(_pn>0&&_mm){var _n=parseInt(_mm[1],10);var _v=parseFloat(_mm[2].replace(/\.(?=\d{3}(?:\D|$))/g,'').replace(',','.'));if(_n&&_v&&Math.abs(_n*_v-_pn)>Math.max(0.5,_pn*0.02))_inst='';} }catch(e){} instEl.textContent = _inst; instEl.style.display = _inst ? 'block' : 'none'; }
         if (info && ((prodName || '').trim() || price)) info.style.display = 'block';
         // Escassez
         var sc = document.getElementById('q-scarcity');
