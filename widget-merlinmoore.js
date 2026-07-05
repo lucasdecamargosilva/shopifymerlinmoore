@@ -1,4 +1,4 @@
-/* PL widget build: 2026-07-05 v3 (deteccao de rosto: so-rostos) */
+/* PL widget build: 2026-07-05 v4 (rosto principal + packshots p/ detalhe) */
 (function () {
     function toJpeg(file){return new Promise(function(res){try{var img=new Image();var u=URL.createObjectURL(file);img.onload=function(){URL.revokeObjectURL(u);var w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;if(!w||!h){res(file);return;}var sc=Math.min(1,1280/Math.max(w,h));var cw=Math.round(w*sc),ch=Math.round(h*sc);var c=document.createElement('canvas');c.width=cw;c.height=ch;c.getContext('2d').drawImage(img,0,0,cw,ch);c.toBlob(function(b){res(b||file);},'image/jpeg',0.92);};img.onerror=function(){URL.revokeObjectURL(u);res(file);};img.src=u;}catch(e){res(file);}});}
 
@@ -1799,12 +1799,25 @@ const fd = new FormData();
                             if (!allProdImgs.some(p => String(p).split('?')[0] === _cu)) allProdImgs.push(_u);
                         }
                     } catch (_) {}
-                    // Detecção de rosto: se achou fotos do óculos no rosto, envia SÓ elas como
-                    // referência (mais efetivas que packshot de fundo branco). Sem rosto → mantém
-                    // as fotos default (fallback, sem regressão).
+                    // Detecção de rosto: manda 1 foto no rosto como PRINCIPAL (o gerador usa pra
+                    // calibrar a proporção/tamanho do óculos) + as fotos de fundo branco (packshot),
+                    // que mostram os detalhes da armação. Assim garante proporção E detalhe.
+                    // Sem rosto detectado → mantém as fotos default (fallback, sem regressão).
                     try {
                         if (faceDetectPromise) { await Promise.race([faceDetectPromise, new Promise(function (r) { setTimeout(r, 4000); })]); }
-                        if (_faceUrls && _faceUrls.length) { allProdImgs = _faceUrls.slice(); }
+                        if (_faceUrls && _faceUrls.length) {
+                            var _key = function (u) { return String(u || '').split('?')[0]; };
+                            var _faceKeys = {};
+                            _faceUrls.forEach(function (u) { _faceKeys[_key(u)] = 1; });
+                            var _packshots = allProdImgs.filter(function (u) { return !_faceKeys[_key(u)]; });
+                            var _mix = [];
+                            var _add = function (u) { if (u && !_mix.some(function (x) { return _key(x) === _key(u); })) _mix.push(u); };
+                            _add(_faceUrls[0]);                // 1 rosto (proporção) — principal
+                            _packshots.forEach(_add);          // packshots (detalhe da armação)
+                            _faceUrls.slice(1).forEach(_add);  // rostos extras, se sobrar vaga
+                            allProdImgs.forEach(_add);         // fallback: completa com o que houver
+                            allProdImgs = _mix;
+                        }
                     } catch (e) {}
                     allProdImgs = allProdImgs.slice(0, 3);
                     for (let _pi = 0; _pi < allProdImgs.length; _pi++) {
