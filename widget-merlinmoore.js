@@ -1334,9 +1334,9 @@
         function plTrackProved(rawPhone) { try { var d = (rawPhone || '').replace(/\D/g, ''); if (d.length > 11 && d.slice(0, 2) === '55') d = d.slice(2); fetch(WEBHOOK_OPEN_PL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: plSid(), proved: true, telefone_cliente: d || null }) }).catch(function () {}); } catch (e) {} }
         // ── Detecção de rosto: foto do óculos no rosto vira a referência principal ──
         // Roda no navegador (FaceDetector nativo do Chromium; fallback MediaPipe via CDN).
-        // Varre a galeria do produto (extractImages) e marca a 1ª foto com rosto. Fallback
-        // seguro: se nada detectar ou der erro, mantém a ordem default — sem regressão.
-        var faceDetectPromise = null, _faceUrl = null, _faceDet = null, _faceDetTried = false;
+        // Varre a galeria do produto (extractImages) e coleta as fotos com rosto. Fallback
+        // seguro: se nada detectar ou der erro, mantém as fotos default — sem regressão.
+        var faceDetectPromise = null, _faceUrls = [], _faceDet = null, _faceDetTried = false;
         async function getFaceDetector() {
             if (_faceDetTried) return _faceDet;
             _faceDetTried = true;
@@ -1370,25 +1370,28 @@
             } catch (e) {}
             return false;
         }
-        async function _plDetectFacePhoto(urls) {
-            if (!urls || !urls.length) return null;
+        // Coleta TODAS as fotos com rosto (modelo usando o óculos), até 4. Para assim que
+        // atinge o teto — evita baixar a galeria inteira. Preenche _faceUrls incrementalmente,
+        // então mesmo um scan cortado pelo timeout já entrega os rostos achados até ali.
+        async function _plDetectFaces(urls) {
+            if (!urls || !urls.length) return _faceUrls;
             var det = await getFaceDetector();
-            if (!det) return null;
-            for (var i = 0; i < urls.length; i++) {
+            if (!det) return _faceUrls;
+            for (var i = 0; i < urls.length && _faceUrls.length < 4; i++) {
                 var img = await _plLoadCorsImg(urls[i]);
                 if (!img) continue;
-                if (await _plImgHasFace(det, img)) return urls[i];
+                if (await _plImgHasFace(det, img)) _faceUrls.push(urls[i]);
             }
-            return null;
+            return _faceUrls;
         }
         function startFaceDetect() {
             if (faceDetectPromise) return faceDetectPromise;
             var _urls = [];
-            try { if (typeof extractImages === 'function') _urls = extractImages().slice(0, 8); } catch (e) {}
-            faceDetectPromise = _plDetectFacePhoto(_urls).then(function (u) {
-                if (u) { _faceUrl = u; try { console.log('[PL] foto no rosto detectada como principal:', u); } catch (e) {} }
-                return u;
-            }).catch(function () { return null; });
+            try { if (typeof extractImages === 'function') _urls = extractImages().slice(0, 12); } catch (e) {}
+            faceDetectPromise = _plDetectFaces(_urls).then(function (arr) {
+                if (arr && arr.length) { try { console.log('[PL] fotos no rosto detectadas:', arr.length); } catch (e) {} }
+                return arr;
+            }).catch(function () { return _faceUrls; });
             return faceDetectPromise;
         }
 
@@ -1795,14 +1798,12 @@ const fd = new FormData();
                             if (!allProdImgs.some(p => String(p).split('?')[0] === _cu)) allProdImgs.push(_u);
                         }
                     } catch (_) {}
-                    // Detecção de rosto: promove a foto do óculos no rosto a principal (product_image).
+                    // Detecção de rosto: se achou fotos do óculos no rosto, envia SÓ elas como
+                    // referência (mais efetivas que packshot de fundo branco). Sem rosto → mantém
+                    // as fotos default (fallback, sem regressão).
                     try {
                         if (faceDetectPromise) { await Promise.race([faceDetectPromise, new Promise(function (r) { setTimeout(r, 4000); })]); }
-                        if (_faceUrl) {
-                            var _fc = String(_faceUrl).split('?')[0];
-                            allProdImgs = allProdImgs.filter(function (p) { return String(p).split('?')[0] !== _fc; });
-                            allProdImgs.unshift(_faceUrl);
-                        }
+                        if (_faceUrls && _faceUrls.length) { allProdImgs = _faceUrls.slice(); }
                     } catch (e) {}
                     allProdImgs = allProdImgs.slice(0, 3);
                     for (let _pi = 0; _pi < allProdImgs.length; _pi++) {
