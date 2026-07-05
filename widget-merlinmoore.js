@@ -1332,8 +1332,69 @@
         function plSid() { try { var s = localStorage.getItem('pl_sid'); if (!s) { s = 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); localStorage.setItem('pl_sid', s); } return s; } catch (e) { return 'nostore'; } }
         function plTrackOpen() { try { fetch(WEBHOOK_OPEN_PL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: plSid(), origin: location.origin, produto: (document.querySelector('h1.product-name, h1.product__title, .product-single__title, h1') || {}).innerText || document.title || '' }) }).catch(function () {}); } catch (e) {} }
         function plTrackProved(rawPhone) { try { var d = (rawPhone || '').replace(/\D/g, ''); if (d.length > 11 && d.slice(0, 2) === '55') d = d.slice(2); fetch(WEBHOOK_OPEN_PL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: plSid(), proved: true, telefone_cliente: d || null }) }).catch(function () {}); } catch (e) {} }
+        // ── Detecção de rosto: foto do óculos no rosto vira a referência principal ──
+        // Roda no navegador (FaceDetector nativo do Chromium; fallback MediaPipe via CDN).
+        // Varre a galeria do produto (extractImages) e marca a 1ª foto com rosto. Fallback
+        // seguro: se nada detectar ou der erro, mantém a ordem default — sem regressão.
+        var faceDetectPromise = null, _faceUrl = null, _faceDet = null, _faceDetTried = false;
+        async function getFaceDetector() {
+            if (_faceDetTried) return _faceDet;
+            _faceDetTried = true;
+            try {
+                if ('FaceDetector' in window) { _faceDet = { native: new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 }) }; return _faceDet; }
+            } catch (e) {}
+            try {
+                var vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18/vision_bundle.mjs');
+                var fileset = await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18/wasm');
+                var det = await vision.FaceDetector.createFromOptions(fileset, {
+                    baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite' },
+                    runningMode: 'IMAGE'
+                });
+                _faceDet = { mp: det };
+            } catch (e) { _faceDet = null; }
+            return _faceDet;
+        }
+        function _plLoadCorsImg(url) {
+            return new Promise(function (resolve) {
+                var img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = function () { resolve(img); };
+                img.onerror = function () { resolve(null); };
+                img.src = url;
+            });
+        }
+        async function _plImgHasFace(det, img) {
+            try {
+                if (det.native) { var f = await det.native.detect(img); return !!(f && f.length); }
+                if (det.mp) { var r = det.mp.detect(img); return !!(r && r.detections && r.detections.length); }
+            } catch (e) {}
+            return false;
+        }
+        async function _plDetectFacePhoto(urls) {
+            if (!urls || !urls.length) return null;
+            var det = await getFaceDetector();
+            if (!det) return null;
+            for (var i = 0; i < urls.length; i++) {
+                var img = await _plLoadCorsImg(urls[i]);
+                if (!img) continue;
+                if (await _plImgHasFace(det, img)) return urls[i];
+            }
+            return null;
+        }
+        function startFaceDetect() {
+            if (faceDetectPromise) return faceDetectPromise;
+            var _urls = [];
+            try { if (typeof extractImages === 'function') _urls = extractImages().slice(0, 8); } catch (e) {}
+            faceDetectPromise = _plDetectFacePhoto(_urls).then(function (u) {
+                if (u) { _faceUrl = u; try { console.log('[PL] foto no rosto detectada como principal:', u); } catch (e) {} }
+                return u;
+            }).catch(function () { return null; });
+            return faceDetectPromise;
+        }
+
         function openModal() {
             plTrackOpen();
+            try { startFaceDetect(); } catch (e) {}
             // Lazy-load Phosphor Icons na primeira abertura
             if (!window.phosphorIconsLoaded) {
                 var ph = document.createElement('script');
@@ -1734,6 +1795,15 @@ const fd = new FormData();
                             if (!allProdImgs.some(p => String(p).split('?')[0] === _cu)) allProdImgs.push(_u);
                         }
                     } catch (_) {}
+                    // Detecção de rosto: promove a foto do óculos no rosto a principal (product_image).
+                    try {
+                        if (faceDetectPromise) { await Promise.race([faceDetectPromise, new Promise(function (r) { setTimeout(r, 4000); })]); }
+                        if (_faceUrl) {
+                            var _fc = String(_faceUrl).split('?')[0];
+                            allProdImgs = allProdImgs.filter(function (p) { return String(p).split('?')[0] !== _fc; });
+                            allProdImgs.unshift(_faceUrl);
+                        }
+                    } catch (e) {}
                     allProdImgs = allProdImgs.slice(0, 3);
                     for (let _pi = 0; _pi < allProdImgs.length; _pi++) {
                         try {
